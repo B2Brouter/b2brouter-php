@@ -1,0 +1,30 @@
+# Composer
+/vendor/
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+/phpunit.xml
+/.phpunit.result.cache
+/coverage/
+coverage.xml
+
+# Local configuration
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Neovim
+*.swn
