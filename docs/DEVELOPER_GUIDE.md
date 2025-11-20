@@ -38,7 +38,7 @@ composer --version
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/b2b-php.git
+git clone git@github.com:B2Brouter/b2brouter-php.git
 cd b2b-php
 
 # Install dependencies
@@ -155,17 +155,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 #### Option 1: Phpactor
 
-Install the Phpactor extension:
-
-```bash
-# Via command line
-code --install-extension phpactor.vscode-phpactor
-
-# Or via VS Code: Ctrl+P (Cmd+P on Mac), then:
-ext install phpactor.vscode-phpactor
-```
-
-**Install phpactor binary:**
+Install phpactor binary:
 
 ```bash
 # Via composer (recommended)
@@ -179,8 +169,17 @@ curl -Lo phpactor https://github.com/phpactor/phpactor/releases/latest/download/
 chmod +x phpactor
 sudo mv phpactor /usr/local/bin/phpactor
 ```
+Install the Phpactor extension:
 
-Add to `.vscode/settings.json`:
+```bash
+# Via command line
+code --install-extension phpactor.vscode-phpactor
+
+# Or via VS Code: Ctrl+P (Cmd+P on Mac), then:
+ext install phpactor.vscode-phpactor
+```
+
+Optionally, add the following configuration to the `.vscode/settings.json` file located in your project directory:
 
 ```json
 {
@@ -242,7 +241,12 @@ Add to `.vscode/tasks.json`:
 }
 ```
 
-Run tests with: `Ctrl+Shift+B` (Cmd+Shift+B on Mac) or Terminal > Run Task > Run PHPUnit Tests
+Run tests with: `Ctrl+Shift+B` (Cmd+Shift+B on Mac) or Terminal > Run Task > Run PHPUnit Tests.
+Alternatively, you can run the tests directly from the terminal using:
+
+```bash
+vendor/bin/phpunit
+```
 
 ---
 
