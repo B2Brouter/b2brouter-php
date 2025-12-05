@@ -901,7 +901,7 @@ $client = new B2BRouterClient('api-key', [
 ## Support
 
 - **Documentation**: https://developer.b2brouter.net
-- **Email**: servicedelivery@b2brouter.net
+- **Email**: sdk@b2brouter.net
 - **Issues**: Please report bugs and feature requests via GitHub Issues
 
 When reporting issues, please include:

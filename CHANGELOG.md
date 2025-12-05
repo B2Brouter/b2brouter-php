@@ -7,6 +7,114 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-12-05
+
+### First Stable Release
+
+This is the first stable release of the B2BRouter PHP SDK. The SDK is production-ready with semantic versioning guarantees. All future 1.x releases will maintain backward compatibility.
+
+### Features
+
+#### Invoice Management
+- Complete CRUD operations (create, retrieve, update, delete, list)
+- Domain-specific operations:
+  - `validate()` - Validate invoice structure before sending
+  - `send()` - Send invoice to customer and generate tax reports
+  - `markAs()` - Update invoice state (new, sent, paid, etc.)
+  - `acknowledge()` - Mark received invoices as acknowledged
+  - `import()` - Import invoices from external sources
+- Multi-format document downloads:
+  - `downloadAs()` - Download in any supported format
+  - `downloadPdf()` - Convenience method for PDF downloads
+  - Support for PDF (`pdf.invoice`)
+  - Support for Spanish Facturae XML (`xml.facturae.3.2.2`)
+  - Support for UBL BIS3 (`xml.ubl.invoice.bis3`)
+  - Additional formats based on account configuration
+
+#### Tax Reports
+- Full CRUD operations (create, retrieve, update, delete, list)
+- Multi-jurisdiction support:
+  - Spanish Verifactu (Law 11/2021 Anti-Fraud compliance)
+  - TicketBAI (Basque Country: Álava, Bizkaia, Gipuzkoa)
+  - Italian SDI (Sistema di Interscambio)
+  - Polish KSeF (National e-Invoicing System)
+  - Saudi Zatca (e-invoicing)
+- Automatic tax report generation on invoice send
+- QR code generation for invoice verification
+- Digital fingerprint and hash chain computation
+- Corrections (subsanación) via `update()`
+- Annullations (anulación) via `delete()`
+- XML download support
+
+#### Tax Report Settings
+- Configure tax authority settings (Verifactu, TicketBAI, etc.)
+- Full CRUD operations
+- Auto-generation and auto-send configuration
+- Special regime and exemption settings
+
+#### HTTP Client & Error Handling
+- Automatic retry logic with exponential backoff (configurable, default: 3 retries)
+- Configurable timeouts (request: 80s, connection: 30s)
+- Custom HTTP client support via `ClientInterface`
+- Comprehensive exception hierarchy:
+  - `ApiErrorException` - Base exception for all API errors
+  - `AuthenticationException` - Invalid API key (401)
+  - `PermissionException` - Insufficient permissions (403)
+  - `ResourceNotFoundException` - Resource not found (404)
+  - `InvalidRequestException` - Validation errors (400, 422)
+  - `ApiConnectionException` - Network/connection errors
+- Rich exception context with HTTP status, headers, request ID
+
+#### Collections & Pagination
+- Collection class implementing Iterator and Countable interfaces
+- Easy iteration with native `foreach` loops
+- Pagination metadata (total, offset, limit)
+- `hasMore()` helper for checking additional pages
+
+#### Developer Experience
+- Modern PHP 7.4+ with type hints throughout
+- PSR-4 autoloading
+- PSR-12 coding standards compliant
+- Zero dependencies (only PHP extensions: cURL, JSON, mbstring)
+- 15 working examples covering all features
+- Comprehensive documentation:
+  - README.md with quick start and examples
+  - API_REFERENCE.md with complete method documentation
+  - SPANISH_INVOICING.md with Verifactu compliance guide
+  - TAX_REPORTS.md with tax reporting details
+  - DEVELOPER_GUIDE.md with setup and best practices
+- Environment configuration support via `.env` files
+- Composer scripts for testing (`test`, `test:all`, `test:coverage`)
+
+### Upgrade from 0.9.x
+
+No breaking changes. Update your composer.json:
+
+```json
+{
+  "require": {
+    "b2brouter/b2brouter-php": "^1.0"
+  }
+}
+```
+
+Then run: `composer update b2brouter/b2brouter-php`
+
+All 0.9.x code is fully compatible with 1.0.0.
+
+### Requirements
+
+- PHP 7.4 or higher
+- cURL extension
+- JSON extension
+- mbstring extension
+
+### Support
+
+- **Documentation:** https://developer.b2brouter.net
+- **Email:** sdk@b2brouter.net
+- **Issues:** https://github.com/B2Brouter/b2brouter-php/issues
+
 ## [0.9.1] - 2025-11-19
 
 ### Added
@@ -176,11 +284,12 @@ This is a **beta release** (v0.9.x) intended for early adopters and development/
 ### Support
 
 - **Documentation:** https://developer.b2brouter.net
-- **Email:** servicedelivery@b2brouter.net
+- **Email:** sdk@b2brouter.net
 - **Issues:** https://github.com/B2Brouter/b2brouter-php/issues
 
 ---
 
-[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.1...v1.0.0
 [0.9.1]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/B2Brouter/b2brouter-php/releases/tag/v0.9.0

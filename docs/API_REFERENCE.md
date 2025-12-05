@@ -1388,6 +1388,11 @@ class LoggingHttpClient implements ClientInterface
 
 ## Version History
 
+### v1.0.0 (2025-12-05)
+- First stable release with semantic versioning guarantees
+- Production-ready with backward compatibility commitments
+- All features from 0.9.x series are now stable
+
 ### v0.9.1 (2025-11-19)
 - Added invoice document download support (PDF and XML formats)
 - Added `downloadAs()` and `downloadPdf()` methods to InvoiceService
@@ -1409,7 +1414,7 @@ For additional help:
 
 - **Documentation:** https://developer.b2brouter.net
 - **API Reference:** https://developer.b2brouter.net/v2025-10-13/reference
-- **Email:** servicedelivery@b2brouter.net
+- **Email:** sdk@b2brouter.net
 - **Issues:** GitHub Issues
 
 When reporting issues, always include:

@@ -551,4 +551,4 @@ git push                           # Push to remote
 
 ---
 
-For issues or questions, contact: servicedelivery@b2brouter.net
+For issues or questions, contact: sdk@b2brouter.net
