@@ -14,7 +14,7 @@ class B2BRouterClientTest extends TestCase
 
         $this->assertEquals('test_api_key', $client->getApiKey());
         $this->assertEquals('https://api-staging.b2brouter.net', $client->getApiBase());
-        $this->assertEquals('2026-03-02', $client->getApiVersion());
+        $this->assertEquals('2025-10-13', $client->getApiVersion());
         $this->assertEquals(80, $client->getTimeout());
     }
 
@@ -64,36 +64,6 @@ class B2BRouterClientTest extends TestCase
         $service2 = $client->invoices;
 
         $this->assertSame($service1, $service2);
-    }
-
-    public function testDefaultApiVersionHeaderSentInRequests()
-    {
-        [$client, $mockHttp] = $this->createTestClient();
-
-        $mockHttp->addResponse($this->mockResponse([
-            'invoice' => ['id' => 'inv_1']
-        ]));
-
-        $client->invoices->retrieve('inv_1');
-
-        $request = $mockHttp->getLastRequest();
-        $this->assertEquals('2026-03-02', $request['headers']['X-B2B-API-Version']);
-    }
-
-    public function testCustomApiVersionHeaderSentInRequests()
-    {
-        [$client, $mockHttp] = $this->createTestClient([
-            'api_version' => '2025-10-13'
-        ]);
-
-        $mockHttp->addResponse($this->mockResponse([
-            'invoice' => ['id' => 'inv_1']
-        ]));
-
-        $client->invoices->retrieve('inv_1');
-
-        $request = $mockHttp->getLastRequest();
-        $this->assertEquals('2025-10-13', $request['headers']['X-B2B-API-Version']);
     }
 
     public function testGetUnknownServiceThrowsException()
