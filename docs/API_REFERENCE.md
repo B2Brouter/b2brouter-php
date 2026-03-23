@@ -37,7 +37,7 @@ public function __construct(string $apiKey, array $config = [])
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `api_base` | string | `https://api-staging.b2brouter.net` | API base URL |
-| `api_version` | string | `2025-10-13` | API version |
+| `api_version` | string | `2026-03-02` | API version |
 | `timeout` | int | `80` | Request timeout in seconds |
 | `max_retries` | int | `3` | Maximum retry attempts for network failures |
 | `http_client` | ClientInterface | `CurlClient` | Custom HTTP client implementation |
@@ -53,7 +53,7 @@ $client = new B2BRouterClient('your-api-key');
 // With custom configuration
 $client = new B2BRouterClient('your-api-key', [
     'api_base' => 'https://api.b2brouter.net',
-    'api_version' => '2025-10-13',
+    'api_version' => '2026-03-02',
     'timeout' => 120,
     'max_retries' => 5
 ]);
@@ -221,7 +221,6 @@ public function all(string $accountId, array $params = [], array $options = []):
 | `due_date_from` | string | Filter by due date |
 | `due_date_to` | string | Filter by due date |
 | `number` | string | Filter by invoice number |
-| `taxcode` | string | Filter by customer tax code |
 | `type` | string | Filter by invoice type |
 | `new` | bool | Filter new invoices |
 | `sent` | bool | Filter sent invoices |
@@ -1236,7 +1235,7 @@ $client = new B2BRouterClient('api-key', [
 
 ### API Versions
 
-**Current:** `2025-10-13`
+**Current:** `2026-03-02`
 
 The API version controls the response format and available features. Always specify the version you've developed against.
 
@@ -1413,7 +1412,7 @@ class LoggingHttpClient implements ClientInterface
 For additional help:
 
 - **Documentation:** https://developer.b2brouter.net
-- **API Reference:** https://developer.b2brouter.net/v2025-10-13/reference
+- **API Reference:** https://developer.b2brouter.net/v2026-03-02/reference
 - **Email:** sdk@b2brouter.net
 - **Issues:** GitHub Issues
 

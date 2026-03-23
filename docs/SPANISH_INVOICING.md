@@ -641,7 +641,7 @@ $invoice = $client->invoices->create($accountId, [
 ### Resources
 
 - [B2BRouter API Documentation](https://developer.b2brouter.net)
-- [B2Brouter Verifactu Guide](https://developer.b2brouter.net/v2025-10-13/docs/verifactu) - Full B2Brouter Verifactu Guide.
+- [B2Brouter Verifactu Guide](https://developer.b2brouter.net/v2026-03-02/docs/verifactu) - Full B2Brouter Verifactu Guide.
 - [Verifactu Official Specifications (AEAT)](https://www.agenciatributaria.es)
 - [Spanish Anti-Fraud Law](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2021-11473)
 - [Royal Decree 1007/2023](https://www.boe.es/buscar/act.php?id=BOE-A-2023-24840)
