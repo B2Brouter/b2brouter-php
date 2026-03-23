@@ -147,7 +147,7 @@ class ExceptionTest extends TestCase
 
         $headers = [
             'Content-Type' => 'application/json',
-            'X-B2B-API-Request-Id' => 'req_test_12345'
+            'X-Request-Id' => 'req_test_12345'
         ];
 
         $mockHttp->addResponse($this->mockErrorResponse('Not found', 404, [], $headers));
@@ -157,45 +157,6 @@ class ExceptionTest extends TestCase
         } catch (ResourceNotFoundException $e) {
             $this->assertEquals('req_test_12345', $e->getRequestId());
             $this->assertEquals($headers, $e->getHttpHeaders());
-        }
-    }
-
-    public function testExceptionWithLegacyRequestIdHeader()
-    {
-        [$client, $mockHttp] = $this->createTestClient();
-
-        $mockHttp->addResponse([
-            'body' => json_encode(['error' => ['message' => 'Not found', 'type' => 'api_error']]),
-            'status' => 404,
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'X-Request-Id' => 'req_legacy_67890'
-            ]
-        ]);
-
-        try {
-            $client->invoices->retrieve('inv_12345');
-        } catch (ResourceNotFoundException $e) {
-            $this->assertEquals('req_legacy_67890', $e->getRequestId());
-        }
-    }
-
-    public function testExceptionPrefersNewRequestIdHeader()
-    {
-        [$client, $mockHttp] = $this->createTestClient();
-
-        $headers = [
-            'Content-Type' => 'application/json',
-            'X-B2B-API-Request-Id' => 'req_new_header',
-            'X-Request-Id' => 'req_old_header'
-        ];
-
-        $mockHttp->addResponse($this->mockErrorResponse('Not found', 404, [], $headers));
-
-        try {
-            $client->invoices->retrieve('inv_12345');
-        } catch (ResourceNotFoundException $e) {
-            $this->assertEquals('req_new_header', $e->getRequestId());
         }
     }
 

@@ -662,9 +662,9 @@ Common fields in tax report responses:
 ### Related Documentation
 
 - [Spanish Invoicing Guide](SPANISH_INVOICING.md) - Verifactu compliance for Spain using b2b-php SDK.
-- [B2Brouter Verifactu Guide](https://developer.b2brouter.net/v2026-03-02/docs/verifactu) - Full B2Brouter Verifactu Guide.
-- [B2BRouter API Reference](https://developer.b2brouter.net/v2026-03-02/reference) - Complete API documentation
-- [Tax Report Settings API](https://developer.b2brouter.net/v2026-03-02/reference/tax_report_settings_guide) - Configuration reference
+- [B2Brouter Verifactu Guide](https://developer.b2brouter.net/v2025-10-13/docs/verifactu) - Full B2Brouter Verifactu Guide.
+- [B2BRouter API Reference](https://developer.b2brouter.net/v2025-10-13/reference) - Complete API documentation
+- [Tax Report Settings API](https://developer.b2brouter.net/v2025-10-13/reference/tax_report_settings_guide) - Configuration reference
 
 ## Examples
 

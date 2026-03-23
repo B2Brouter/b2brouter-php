@@ -33,9 +33,7 @@ class ApiErrorException extends \Exception implements ExceptionInterface
         $this->jsonBody = $jsonBody;
         $this->httpHeaders = $httpHeaders;
 
-        if (isset($httpHeaders['X-B2B-API-Request-Id'])) {
-            $this->requestId = $httpHeaders['X-B2B-API-Request-Id'];
-        } elseif (isset($httpHeaders['X-Request-Id'])) {
+        if (isset($httpHeaders['X-Request-Id'])) {
             $this->requestId = $httpHeaders['X-Request-Id'];
         }
     }
