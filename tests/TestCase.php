@@ -46,7 +46,7 @@ abstract class TestCase extends PHPUnitTestCase
     {
         $defaultHeaders = [
             'Content-Type' => 'application/json',
-            'X-Request-Id' => 'req_' . uniqid()
+            'X-B2B-API-Request-Id' => 'req_' . uniqid()
         ];
 
         // Merge with provided headers taking precedence
