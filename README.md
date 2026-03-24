@@ -31,6 +31,8 @@ Official PHP SDK for the B2BRouter API - Electronic Invoicing and Tax Reporting
 - **Multi-format document downloads** - Export invoices as PDF, Spanish Facturae XML, UBL BIS3, and other formats
 - **Tax report operations** - Create, retrieve, list, download, update (corrections), and delete (annullations) tax reports
 - **Tax report settings** - Configure and manage Verifactu, TicketBAI, and other tax authority settings
+- **Account management** - List, create, retrieve, update, delete, unarchive accounts and manage logos
+- **Contact management** - List, create, retrieve, update, and delete contacts
 
 ### Developer Experience
 - **Simple and intuitive API** - Clean, modern PHP interface with service-based architecture
@@ -333,6 +335,116 @@ $invoice = $client->invoices->markAs($invoiceId, [
 $result = $client->invoices->acknowledge($invoiceId, [
     'ack' => true
 ]);
+```
+
+### Account Operations
+
+#### List Accounts
+
+```php
+$accounts = $client->accounts->all(['limit' => 25]);
+
+foreach ($accounts as $account) {
+    echo "Account {$account['name']}: {$account['tin_value']}\n";
+}
+```
+
+#### Retrieve an Account
+
+```php
+$account = $client->accounts->retrieve($accountId);
+echo "Account: {$account['name']}\n";
+```
+
+#### Create an Account
+
+```php
+$account = $client->accounts->create([
+    'account' => [
+        'name' => 'New Company S.L.',
+        'tin_value' => 'ESB12345678',
+        'email' => 'admin@company.com',
+        'phone' => '+34600000000',
+        'address' => 'Calle Gran Vía 1',
+        'city' => 'Madrid',
+        'postalcode' => '28001',
+        'province' => 'Madrid',
+        'country' => 'es',
+    ]
+]);
+```
+
+#### Update, Delete, and Unarchive
+
+```php
+// Update an account
+$account = $client->accounts->update($accountId, [
+    'account' => ['name' => 'Updated Name']
+]);
+
+// Delete (archive) an account
+$result = $client->accounts->delete($accountId);
+
+// Unarchive an account
+$account = $client->accounts->unarchive($accountId);
+```
+
+#### Logo Management
+
+```php
+// Upload a logo (raw binary data)
+$logoData = file_get_contents('/path/to/logo.png');
+$account = $client->accounts->uploadLogo($accountId, $logoData);
+
+// Delete a logo
+$account = $client->accounts->deleteLogo($accountId);
+```
+
+### Contact Operations
+
+#### List Contacts
+
+```php
+$contacts = $client->contacts->all($accountId, [
+    'limit' => 25,
+    'is_client' => true,
+]);
+
+foreach ($contacts as $contact) {
+    echo "Contact {$contact['name']}: {$contact['tin_value']}\n";
+}
+```
+
+#### Create a Contact
+
+```php
+$contact = $client->contacts->create($accountId, [
+    'contact' => [
+        'name' => 'Customer Company',
+        'email' => 'billing@customer.com',
+        'tin_value' => 'ESB87654321',
+        'country' => 'ES',
+        'address' => 'Calle Mayor 10',
+        'city' => 'Barcelona',
+        'postalcode' => '08001',
+        'province' => 'Barcelona',
+    ]
+]);
+```
+
+#### Retrieve, Update, and Delete
+
+```php
+// Retrieve a contact
+$contact = $client->contacts->retrieve($contactId);
+
+// Update a contact
+$contact = $client->contacts->update($contactId, [
+    'contact' => ['name' => 'Updated Customer']
+]);
+
+// Delete a contact
+$result = $client->contacts->delete($contactId);
 ```
 
 ### Tax Reports
@@ -843,6 +955,37 @@ The SDK provides comprehensive coverage of the B2BRouter API with the following 
 - `VeriFactu` - Spanish Verifactu configuration
 - `TicketBai` - TicketBAI configuration
 
+#### Account Service (`$client->accounts`)
+
+| Method | HTTP | Endpoint | Description |
+|--------|------|----------|-------------|
+| `all()` | GET | `/accounts` | List accounts (paginated) |
+| `create()` | POST | `/accounts` | Create a new account |
+| `retrieve()` | GET | `/accounts/{id}` | Retrieve an account |
+| `update()` | PUT | `/accounts/{id}` | Update an account |
+| `delete()` | DELETE | `/accounts/{id}` | Archive/delete an account |
+| `unarchive()` | POST | `/accounts/{id}/unarchive` | Unarchive an account |
+| `uploadLogo()` | POST | `/accounts/{id}/logo` | Upload account logo |
+| `deleteLogo()` | DELETE | `/accounts/{id}/logo` | Delete account logo |
+
+**Query Parameters:**
+- Pagination: `offset`, `limit` (max 500)
+- Filtering: `query` (Ransack syntax — `tin_value`, `country`, `name`, `status`, etc.)
+
+#### Contact Service (`$client->contacts`)
+
+| Method | HTTP | Endpoint | Description |
+|--------|------|----------|-------------|
+| `all()` | GET | `/accounts/{account}/contacts` | List contacts (paginated) |
+| `create()` | POST | `/accounts/{account}/contacts` | Create a contact |
+| `retrieve()` | GET | `/contacts/{id}` | Retrieve a contact |
+| `update()` | PUT | `/contacts/{id}` | Update a contact |
+| `delete()` | DELETE | `/contacts/{id}` | Delete a contact |
+
+**Query Parameters:**
+- Pagination: `offset`, `limit` (max 500)
+- Filtering: `name`, `is_client`, `is_provider`, `integration_code`
+
 ### SDK Architecture
 
 #### Core Classes
@@ -853,6 +996,8 @@ The SDK provides comprehensive coverage of the B2BRouter API with the following 
 
 #### Service Classes
 
+- **AccountService** - Account operations (lib/B2BRouter/Service/AccountService.php:1)
+- **ContactService** - Contact operations (lib/B2BRouter/Service/ContactService.php:1)
 - **InvoiceService** - All invoice operations (lib/B2BRouter/Service/InvoiceService.php:1)
 - **TaxReportService** - Tax report operations (lib/B2BRouter/Service/TaxReportService.php:1)
 - **TaxReportSettingService** - Settings management (lib/B2BRouter/Service/TaxReportSettingService.php:1)
@@ -900,6 +1045,7 @@ $client = new B2BRouterClient('api-key', [
 - **[Spanish Invoicing Guide](docs/SPANISH_INVOICING.md)** - Comprehensive guide for Spanish Verifactu compliance
 - **[Tax Reports Documentation](docs/TAX_REPORTS.md)** - Detailed tax reporting documentation for Verifactu and TicketBAI
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Contributing, development setup, and IDE configuration
+- **[Versioning Policy](docs/VERSIONING.md)** - SDK versioning policy and API version migration guidance
 
 ### B2BRouter Platform Documentation
 - **[B2BRouter API Reference](https://developer.b2brouter.net/v2026-03-02/reference)** - REST API documentation
