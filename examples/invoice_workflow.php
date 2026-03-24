@@ -9,7 +9,7 @@ use B2BRouter\Exception\ApiErrorException;
 checkRequiredEnv();
 
 $client = new B2BRouterClient(env('B2B_API_KEY'), [
-    'api_version' => env('B2B_API_VERSION', '2025-10-13'),
+    'api_version' => env('B2B_API_VERSION', '2026-03-02'),
     'api_base' => env('B2B_API_BASE'),
 ]);
 

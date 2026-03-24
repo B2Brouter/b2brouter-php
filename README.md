@@ -167,13 +167,21 @@ The client accepts several configuration options:
 $client = new B2BRouterClient('your-api-key', [
     // 'api_base' => 'https://api.b2brouter.net',  // Production URL
     // 'api_base' => 'https://api-staging.b2brouter.net',  // Staging URL (default)
-    'api_version' => '2025-10-13',              // API version
+    'api_version' => '2026-03-02',              // API version
     'timeout' => 80,                             // Request timeout in seconds
     'max_retries' => 3,                          // Maximum retry attempts
 ]);
 ```
 
 **Default Environment:** The SDK defaults to the **staging environment** (`https://api-staging.b2brouter.net`) for safe testing. To use production, set `api_base` to `https://api.b2brouter.net`.
+
+**Multi-version support:** The SDK defaults to API version `2026-03-02`. To use an older API version, pass it explicitly in the configuration:
+
+```php
+$client = new B2BRouterClient('your-api-key', [
+    'api_version' => '2025-10-13',  // Use older API version
+]);
+```
 
 ## Core Concepts
 
@@ -789,7 +797,7 @@ The SDK provides comprehensive coverage of the B2BRouter API with the following 
 - Pagination: `offset`, `limit` (max 500)
 - Date filtering: `date_from`, `date_to`, `due_date_from`, `due_date_to`
 - State filtering: `new`, `sent`, `paid`, `error`, `refused`, etc.
-- Search: `number`, `taxcode`
+- Search: `number`
 
 #### Tax Report Service (`$client->taxReports`)
 
@@ -872,7 +880,7 @@ ExceptionInterface
 ```php
 $client = new B2BRouterClient('api-key', [
     'api_base' => 'https://api.b2brouter.net',     // API endpoint
-    'api_version' => '2025-10-13',                  // API version
+    'api_version' => '2026-03-02',                  // API version
     'timeout' => 80,                                // Request timeout (seconds)
     'max_retries' => 3,                             // Retry attempts on connection failure
     'http_client' => $customClient                  // Custom HTTP client (optional)
@@ -881,7 +889,7 @@ $client = new B2BRouterClient('api-key', [
 
 **Default Values:**
 - `api_base`: `https://api-staging.b2brouter.net` (staging)
-- `api_version`: `2025-10-13`
+- `api_version`: `2026-03-02`
 - `timeout`: `80` seconds
 - `max_retries`: `3` attempts
 
@@ -894,8 +902,8 @@ $client = new B2BRouterClient('api-key', [
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Contributing, development setup, and IDE configuration
 
 ### B2BRouter Platform Documentation
-- **[B2BRouter API Reference](https://developer.b2brouter.net/v2025-10-13/reference)** - REST API documentation
-- **[Verifactu Guide](https://developer.b2brouter.net/v2025-10-13/docs/verifactu)** - Complete B2BRouter Verifactu guide
+- **[B2BRouter API Reference](https://developer.b2brouter.net/v2026-03-02/reference)** - REST API documentation
+- **[Verifactu Guide](https://developer.b2brouter.net/v2026-03-02/docs/verifactu)** - Complete B2BRouter Verifactu guide
 - **[Developer Portal](https://developer.b2brouter.net)** - Guides, tutorials, and integration resources
 
 ## Support

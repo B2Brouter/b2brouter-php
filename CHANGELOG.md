@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-03-24
+
+### Changed
+
+- Default API version updated from `2025-10-13` to `2026-03-02`
+- Request ID header updated to `X-B2B-API-Request-Id` (falls back to `X-Request-Id` for older API versions)
+
+### API version `2026-03-02` migration guide
+
+The following changes apply **only if you use API version `2026-03-02`** (the new default). If you pin `'api_version' => '2025-10-13'`, your existing code continues to work unchanged.
+
+To keep the previous API version:
+
+```php
+$client = new B2BRouterClient('your-api-key', [
+    'api_version' => '2025-10-13',
+]);
+```
+
+#### Removed invoice fields
+
+The following invoice-level fields have been removed. Use `allowance_charges_attributes` instead:
+
+- `discount_amount`, `discount_percent`, `discount_text` — use `allowance_charges_attributes` with `allowance_charge_indicator: "allowance"`
+- `charge_amount`, `charge_percent`, `charge_reason` — use `allowance_charges_attributes` with `allowance_charge_indicator: "charge"`
+- `apply_taxes_to_charge` — use `allowance_charges_attributes` with individual `apply_taxes` settings
+- `charge_is_reimbursable_expense` — use `allowance_charges_attributes` with individual `is_reimbursable_expense` settings
+
+#### Removed invoice line fields
+
+The following line-level fields have been removed. Use `allowance_charges_attributes` instead:
+
+- `discount_amount`, `discount_percent`, `discount_text` — use `allowance_charges_attributes` with `allowance_charge_indicator: "allowance"`
+- `charge_amount`, `charge_percent`, `charge_reason` — use `allowance_charges_attributes` with `allowance_charge_indicator: "charge"`
+
+#### Invoice search: `taxcode` replaced by `query`
+
+Before (API `2025-10-13`):
+```php
+$invoices = $client->invoices->all($accountId, ['taxcode' => 'ESB12345678']);
+```
+
+After (API `2026-03-02`):
+```php
+$invoices = $client->invoices->all($accountId, ['query' => 'tin_value=ESB12345678']);
+```
+
+#### Other API changes
+
+- **`type_document` renamed to `type_code`** on invoices for document type codes (Peppol, CII, KSeF, FatturaPA)
+- **Scheme fields** (`tin_scheme`, `cin_scheme`, `pin_scheme`) now return zero-padded 4-character strings (e.g., `"0007"` instead of `7`). Unknown scheme returns `nil` instead of `"0001"`.
+- **POST create endpoints** now return `201 Created` instead of `200 OK` (SDK handles this transparently)
+- **`contact_id` ignored** for `IssuedSimplifiedInvoice` — simplified invoices always use inline contact fields
+- **Contact `is_provider`** now defaults to `true` when creating contacts via API
+
+#### New API fields (no SDK changes required)
+
+These fields are automatically available through the array-based response:
+
+- Invoice: `base_quantity` (decimal), `tax_currency_code` (ISO 4217 string), `tax_amount_in_tax_currency` (decimal), `payments_on_account`
+- TaxReport: `annulled_by_id`, `corrected_by_id` (integer, nullable), `payment_account_name`, `purchase_order_reference`, `sales_order_reference`, `tax_inclusive_amount_before_allowances_and_charges` (KSeF-specific)
+- TaxReportLine: `item_seller_identifier`, `item_standard_identifier` (TicketBAI/KSeF)
+- BankAccount: `is_default` (boolean)
+
 ## [1.0.0] - 2025-12-05
 
 ### First Stable Release
@@ -289,7 +353,8 @@ This is a **beta release** (v0.9.x) intended for early adopters and development/
 
 ---
 
-[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/B2Brouter/b2brouter-php/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.1...v1.0.0
 [0.9.1]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/B2Brouter/b2brouter-php/releases/tag/v0.9.0
