@@ -104,7 +104,8 @@ class InvoiceService extends ApiResource
      *   - due_date_from: Filter by due date from
      *   - due_date_to: Filter by due date to
      *   - number: Filter by invoice number
-     *   - taxcode: Filter by tax code
+     *   - taxcode: Filter by tax code (API 2025-10-13 only)
+     *   - query: Ransack query filter, e.g., 'tin_value=ESB12345678' (API 2026-03-02+)
      *   - new: Filter by new status
      *   - sending: Filter by sending status
      *   - error: Filter by error status
