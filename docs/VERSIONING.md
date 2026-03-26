@@ -60,6 +60,16 @@ B2BRouter releases 3–4 API versions per year. If each API version required a n
 
 2. **It confuses users.** Rapidly incrementing major versions suggests instability, when in practice the SDK interface is stable.
 
+## New API endpoints and SDK compatibility
+
+When the SDK adds support for a new B2BRouter API endpoint (e.g., a new service class), the service is included in the SDK as a **minor release**. The SDK does not validate whether your configured API version supports the endpoint — it sends the request and lets the B2BRouter server handle compatibility.
+
+This means:
+
+- If you upgrade the SDK and it includes a new service, but you pin an older API version, calling that service may return a server-side error (e.g., 404) if the endpoint doesn't exist in that API version.
+- The SDK will never prevent you from making the call. The server is the source of truth.
+- The CHANGELOG and service docblocks should note which API version introduced the endpoint, so users know what's required.
+
 ## API version migration guidance
 
 When a minor release changes the default API version, the CHANGELOG should document:
@@ -69,4 +79,4 @@ When a minor release changes the default API version, the CHANGELOG should docum
 3. How to pin the previous version if the user isn't ready to migrate
 4. Migration examples for affected API changes (before/after code snippets)
 
-This ensures users can upgrade the SDK safely and migrate to the new API version at their own pace.
+This ensures users can upgrade the SDK safely and migrate to the new API version at their own pace. 

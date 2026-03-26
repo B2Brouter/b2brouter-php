@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-03-26
+
+### Added
+
+- **`AccountService`** (`$client->accounts`) — full account management:
+  - `all()` — list accounts with Ransack query filtering
+  - `create()` — create a new account (eDocSync subscriptions)
+  - `retrieve()` — get account details
+  - `update()` — update account fields
+  - `delete()` — archive or delete an account
+  - `unarchive()` — restore an archived account
+  - `uploadLogo()` — upload account logo (binary)
+  - `deleteLogo()` — remove account logo
+- **`ContactService`** (`$client->contacts`) — full contact management:
+  - `all()` — list contacts with filtering by name, type, and integration code
+  - `create()` — create a new contact
+  - `retrieve()` — get contact details
+  - `update()` — update contact fields
+  - `delete()` — delete a contact
+- New examples: `accounts.php`, `contacts.php`
+- `docs/VERSIONING.md` — SDK versioning policy documentation
+
 ## [1.1.0] - 2026-03-24
 
 ### Changed
@@ -353,7 +375,8 @@ This is a **beta release** (v0.9.x) intended for early adopters and development/
 
 ---
 
-[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/B2Brouter/b2brouter-php/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/B2Brouter/b2brouter-php/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.1...v1.0.0
 [0.9.1]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.0...v0.9.1
