@@ -45,6 +45,7 @@ abstract class ApiResource
         $headers = [
             'X-B2B-API-Key' => $this->client->getApiKey(),
             'X-B2B-API-Version' => $this->client->getApiVersion(),
+            'User-Agent' => $this->client->getUserAgent(),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json'
         ];
@@ -130,6 +131,7 @@ abstract class ApiResource
         $headers = [
             'X-B2B-API-Key' => $this->client->getApiKey(),
             'X-B2B-API-Version' => $this->client->getApiVersion(),
+            'User-Agent' => $this->client->getUserAgent(),
             'Accept' => $acceptType
         ];
 

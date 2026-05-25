@@ -185,6 +185,28 @@ $client = new B2BRouterClient('your-api-key', [
 ]);
 ```
 
+### Identifying your application
+
+The SDK sends a `User-Agent` header on every request, identifying itself, the PHP runtime, and libcurl. Applications that wrap the SDK (integrators, plugins, custom tools) can identify themselves by passing `app_info`:
+
+```php
+$client = new B2BRouterClient('your-api-key', [
+    'app_info' => [
+        'name'    => 'B2BRouter-WooCommerce',   // required
+        'version' => '1.0.3',                    // optional
+        'url'     => 'https://shop.example.com', // optional
+    ],
+]);
+```
+
+The resulting `User-Agent` is:
+
+```
+B2BRouter-PHP/1.3.0 (PHP/8.2.10; curl/8.5.0) B2BRouter-WooCommerce/1.0.3 (https://shop.example.com)
+```
+
+This helps B2BRouter support identify the SDK version and the integrating application when investigating support requests. See `examples/identify_caller_app.php` for a runnable demo.
+
 ## Core Concepts
 
 ### Invoice Operations
@@ -1028,7 +1050,12 @@ $client = new B2BRouterClient('api-key', [
     'api_version' => '2026-03-02',                  // API version
     'timeout' => 80,                                // Request timeout (seconds)
     'max_retries' => 3,                             // Retry attempts on connection failure
-    'http_client' => $customClient                  // Custom HTTP client (optional)
+    'http_client' => $customClient,                 // Custom HTTP client (optional)
+    'app_info' => [                                 // Identify the integrating app in User-Agent (optional)
+        'name'    => 'My-App',                      //   required
+        'version' => '1.0.0',                       //   optional
+        'url'     => 'https://example.com',         //   optional
+    ],
 ]);
 ```
 
@@ -1037,6 +1064,7 @@ $client = new B2BRouterClient('api-key', [
 - `api_version`: `2026-03-02`
 - `timeout`: `80` seconds
 - `max_retries`: `3` attempts
+- `app_info`: not set (only the SDK self-identifies in `User-Agent`)
 
 ## Documentation
 

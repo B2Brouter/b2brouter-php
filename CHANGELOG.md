@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`User-Agent` header on every request** — the SDK now identifies itself with a header like `B2BRouter-PHP/1.3.0 (PHP/8.2.10; curl/8.5.0)`. Applies to both JSON and binary endpoints. No caller action required.
+- **`app_info` constructor option** — applications that wrap the SDK (e.g. integrators, plugins) can identify themselves in the `User-Agent` header:
+  ```php
+  $client = new B2BRouterClient('sk_...', [
+      'app_info' => [
+          'name'    => 'B2BRouter-WooCommerce',   // required
+          'version' => '1.0.3',                    // optional
+          'url'     => 'https://shop.example.com', // optional
+      ],
+  ]);
+  ```
+  Produces: `B2BRouter-PHP/1.3.0 (PHP/8.2.10; curl/8.5.0) B2BRouter-WooCommerce/1.0.3 (https://shop.example.com)`.
+- **`B2BRouterClient::VERSION` constant** — the SDK version, also accessible at runtime.
+- **`B2BRouterClient::getUserAgent()`** — returns the composed `User-Agent` string (lazy, cached).
+- New example: `identify_caller_app.php`
+
 ## [1.2.0] - 2026-03-26
 
 ### Added

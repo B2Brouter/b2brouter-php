@@ -21,6 +21,8 @@ use B2BRouter\Service\TaxReportService;
  */
 class B2BRouterClient
 {
+    public const VERSION = '1.3.0';
+
     /**
      * @var string
      */
@@ -52,6 +54,16 @@ class B2BRouterClient
     private $services = [];
 
     /**
+     * @var array|null
+     */
+    private $appInfo;
+
+    /**
+     * @var string|null
+     */
+    private $userAgent;
+
+    /**
      * Create a new B2BRouter client.
      *
      * @param string $apiKey The API key for authentication
@@ -61,6 +73,11 @@ class B2BRouterClient
      *   - http_client: Custom HTTP client implementation
      *   - timeout: Request timeout in seconds (default: 80)
      *   - max_retries: Maximum number of retries (default: 3)
+     *   - app_info: Optional descriptor for the integrating application, appended to the
+     *     User-Agent header. An array with keys:
+     *       - name (required): application name
+     *       - version (optional): application version
+     *       - url (optional): application URL
      */
     public function __construct($apiKey, array $options = [])
     {
@@ -80,6 +97,19 @@ class B2BRouterClient
 
         if (isset($options['timeout'])) {
             $this->timeout = $options['timeout'];
+        }
+
+        if (isset($options['app_info'])) {
+            if (
+                !is_array($options['app_info'])
+                || !isset($options['app_info']['name'])
+                || $options['app_info']['name'] === ''
+            ) {
+                throw new \InvalidArgumentException(
+                    'app_info must be an array with a non-empty "name" key'
+                );
+            }
+            $this->appInfo = $options['app_info'];
         }
 
         if (isset($options['http_client'])) {
@@ -138,6 +168,43 @@ class B2BRouterClient
     public function getTimeout()
     {
         return $this->timeout;
+    }
+
+    /**
+     * Get the User-Agent header value for outgoing requests.
+     *
+     * Composes a string identifying the SDK, the PHP runtime, and libcurl, with an
+     * optional suffix describing the integrating application (see the 'app_info'
+     * constructor option).
+     *
+     * @return string
+     */
+    public function getUserAgent()
+    {
+        if ($this->userAgent !== null) {
+            return $this->userAgent;
+        }
+
+        $base = sprintf(
+            'B2BRouter-PHP/%s (PHP/%s; curl/%s)',
+            self::VERSION,
+            PHP_VERSION,
+            curl_version()['version']
+        );
+
+        if ($this->appInfo === null) {
+            return $this->userAgent = $base;
+        }
+
+        $suffix = $this->appInfo['name'];
+        if (isset($this->appInfo['version']) && $this->appInfo['version'] !== '') {
+            $suffix .= '/' . $this->appInfo['version'];
+        }
+        if (isset($this->appInfo['url']) && $this->appInfo['url'] !== '') {
+            $suffix .= ' (' . $this->appInfo['url'] . ')';
+        }
+
+        return $this->userAgent = $base . ' ' . $suffix;
     }
 
     /**
