@@ -36,7 +36,7 @@ class B2BRouterClient
     /**
      * @var string
      */
-    private $apiVersion = '2026-03-02';
+    private $apiVersion = '2026-04-20';
 
     /**
      * @var ClientInterface

@@ -2,7 +2,7 @@
 /**
  * Example: Using a previous API version
  *
- * The SDK defaults to the latest API version (2026-03-02). If your code
+ * The SDK defaults to the latest API version (2026-04-20). If your code
  * depends on behavior from a previous API version, you can pin it explicitly.
  *
  * This is useful when:
@@ -24,7 +24,7 @@ $accountId = env('B2B_ACCOUNT_ID');
 // ============================================================
 
 $currentClient = new B2BRouterClient(env('B2B_API_KEY'), [
-    'api_version' => env('B2B_API_VERSION', '2026-03-02'),
+    'api_version' => env('B2B_API_VERSION', '2026-04-20'),
     'api_base' => env('B2B_API_BASE'),
 ]);
 
@@ -34,9 +34,14 @@ try {
     $invoices = $currentClient->invoices->all($accountId, ['limit' => 3]);
     echo "Invoices found: {$invoices->getTotal()}\n";
 
-    // In API 2026-03-02, use 'query' for filtering by tax code:
-    // $invoices = $currentClient->invoices->all($accountId, [
-    //     'query' => 'tin_value=ESB12345678',
+    // In API 2026-04-20, amend metadata is structured under invoice_references[]:
+    // $invoice = $currentClient->invoices->create($accountId, [
+    //     'invoice' => [
+    //         // ...
+    //         'invoice_references' => [
+    //             ['reference_type' => 'amend', 'number' => 'INV-001', 'date' => '2025-01-15'],
+    //         ],
+    //     ],
     // ]);
 } catch (\Exception $e) {
     echo "Error: {$e->getMessage()}\n";
@@ -47,7 +52,7 @@ try {
 // ============================================================
 
 $previousClient = new B2BRouterClient(env('B2B_API_KEY'), [
-    'api_version' => '2025-10-13',
+    'api_version' => '2026-03-02',
     'api_base' => env('B2B_API_BASE'),
 ]);
 
@@ -57,9 +62,13 @@ try {
     $invoices = $previousClient->invoices->all($accountId, ['limit' => 3]);
     echo "Invoices found: {$invoices->getTotal()}\n";
 
-    // In API 2025-10-13, 'taxcode' is still available:
-    // $invoices = $previousClient->invoices->all($accountId, [
-    //     'taxcode' => 'ESB12345678',
+    // In API 2026-03-02, flat amend fields are still accepted:
+    // $invoice = $previousClient->invoices->create($accountId, [
+    //     'invoice' => [
+    //         // ...
+    //         'amended_number' => 'INV-001',
+    //         'amended_date' => '2025-01-15',
+    //     ],
     // ]);
 } catch (\Exception $e) {
     echo "Error: {$e->getMessage()}\n";

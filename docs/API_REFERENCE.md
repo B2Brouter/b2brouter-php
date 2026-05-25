@@ -37,7 +37,7 @@ public function __construct(string $apiKey, array $config = [])
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `api_base` | string | `https://api-staging.b2brouter.net` | API base URL |
-| `api_version` | string | `2026-03-02` | API version |
+| `api_version` | string | `2026-04-20` | API version |
 | `timeout` | int | `80` | Request timeout in seconds |
 | `max_retries` | int | `3` | Maximum retry attempts for network failures |
 | `http_client` | ClientInterface | `CurlClient` | Custom HTTP client implementation |
@@ -53,7 +53,7 @@ $client = new B2BRouterClient('your-api-key');
 // With custom configuration
 $client = new B2BRouterClient('your-api-key', [
     'api_base' => 'https://api.b2brouter.net',
-    'api_version' => '2026-03-02',
+    'api_version' => '2026-04-20',
     'timeout' => 120,
     'max_retries' => 5
 ]);
@@ -1237,7 +1237,7 @@ $client = new B2BRouterClient('api-key', [
 
 ### API Versions
 
-**Current:** `2026-03-02`
+**Current:** `2026-04-20`
 
 The API version controls the response format and available features. Always specify the version you've developed against.
 
@@ -1414,7 +1414,7 @@ class LoggingHttpClient implements ClientInterface
 For additional help:
 
 - **Documentation:** https://developer.b2brouter.net
-- **API Reference:** https://developer.b2brouter.net/v2026-03-02/reference
+- **API Reference:** https://developer.b2brouter.net/v2026-04-20/reference
 - **Email:** sdk@b2brouter.net
 - **Issues:** GitHub Issues
 

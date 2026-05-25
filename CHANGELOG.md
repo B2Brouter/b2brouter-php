@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-05-25
+
 ### Added
 
 - **`User-Agent` header on every request** — the SDK now identifies itself with a header like `B2BRouter-PHP/1.3.0 (PHP/8.2.10; curl/8.5.0)`. Applies to both JSON and binary endpoints. No caller action required.
@@ -24,6 +26,96 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`B2BRouterClient::VERSION` constant** — the SDK version, also accessible at runtime.
 - **`B2BRouterClient::getUserAgent()`** — returns the composed `User-Agent` string (lazy, cached).
 - New example: `identify_caller_app.php`
+
+### Changed
+
+- Default API version updated from `2026-03-02` to `2026-04-20`
+
+### API version `2026-04-20` migration guide
+
+The following changes apply **only if you use API version `2026-04-20`** (the new default). If you pin `'api_version' => '2026-03-02'`, your existing code continues to work unchanged.
+
+To keep the previous API version:
+
+```php
+$client = new B2BRouterClient('your-api-key', [
+    'api_version' => '2026-03-02',
+]);
+```
+
+#### Invoice amend fields replaced by `invoice_references[]`
+
+The flat amend fields on invoices have been removed in favour of a structured `invoice_references[]` array. Each entry carries a `reference_type` (`amend` or `prepayment`) plus the reference data.
+
+Removed fields: `amended_number`, `amended_date`, `amended_invoicing_period_start`, `amended_invoicing_period_end`, `amend_reason`, `amend_code_tax`, `correction_method`.
+
+Before (API `2026-03-02`):
+
+```php
+$invoice = $client->invoices->create($accountId, [
+    'invoice' => [
+        // ...
+        'amended_number' => 'INV-2025-001',
+        'amended_date' => '2025-01-15',
+        'amend_reason' => 'Corrected line items',
+    ],
+]);
+```
+
+After (API `2026-04-20`):
+
+```php
+$invoice = $client->invoices->create($accountId, [
+    'invoice' => [
+        // ...
+        'invoice_references' => [
+            [
+                'reference_type' => 'amend',
+                'number' => 'INV-2025-001',
+                'date' => '2025-01-15',
+                'reason' => 'Corrected line items',
+            ],
+        ],
+    ],
+]);
+```
+
+#### Invoice line field typo fix: `clasification_code_scheme` → `classification_code_scheme`
+
+The misspelled `clasification_code_scheme` (single `s`) on invoice lines has been renamed to the correctly-spelled `classification_code_scheme`. Update any payloads that set this field.
+
+#### Removed invoice response field
+
+`payment_method_info` is no longer returned. Use the structured fields instead: `payment_method`, `contact_iban`, `contact_bic`.
+
+#### Inline contact on invoice POST now requires identifier
+
+When creating an invoice with an inline `contact` block via `POST /accounts/{account}/invoices`, the contact must include either `tin_value` or `cin_value`. The only exception is `IssuedSimplifiedInvoice`. Previously the inline contact could be created without an identifier; this now returns `422 parameter_invalid`.
+
+#### Contact `tin_value` / `tin_scheme` validated against parent
+
+When a contact is created or updated with `parent_id` set, `tin_value` and `tin_scheme` must match the parent contact's values. Mismatches now return `422 parameter_invalid` (previously they were silently ignored).
+
+#### Peppol transport response shape changes
+
+The Peppol transport response replaces `standard_documents` and `pending_peppol_directory_publish` with three fields: `sml_status`, `peppol_directory_status`, `reception_document_types`. The SDK does not currently surface Peppol transports through a dedicated service, so this only affects callers parsing the raw response.
+
+#### New API endpoints not yet surfaced by the SDK
+
+The B2BRouter 2026-04-20 platform release adds two capabilities that this SDK does not yet expose. They are noted here so callers are aware they exist at the API level; dedicated SDK support is planned for a future release.
+
+- **TIN verification** — `POST /tin_verifications?country=es` submits a batch of up to 20,000 TIN+name pairs for verification against the tax authority census (Spain / AEAT only at launch). The request returns `202 Accepted`; results are retrieved with `GET /tin_verifications/{id}` or via webhook. A dedicated `TinVerificationService` is planned.
+- **`tin_verification.finished` webhook event** — fired when a TIN verification batch reaches a terminal state (`success` or `failed`). The payload carries only `id` and `status`; use `GET /tin_verifications/{id}` to fetch the full results. Subscribe via the existing webhook configuration; no SDK helpers or event constants are provided yet.
+
+#### New API fields (no SDK changes required)
+
+These fields are automatically available through the array-based response:
+
+- **Accounts:** `routing_codes` (`cin1_value`/`cin1_scheme` … `cin5_value`/`cin5_scheme`), `auto_remittance`, `skip_line_taxable_base_rounding`.
+- **Invoices:** `cin_value` and `cin_scheme` on the contact object; `exchange_rate`, `exchange_date`, `order_date` (previously write-only, now returned); `total_amount_due` accepted as write-only input.
+- **Invoices (KSeF):** `apply_to_local_government_unit`, `apply_to_vat_group_member`, `third_party` (expandable via `?include=`).
+- **Invoice `type_code` (KSeF):** `ZAL`, `ROZ`, `KOR_ZAL`, `KOR_ROZ`, `KOR`, `VAT`, `UPR`.
+- **Tax reports (KSeF):** `customer_party_jst`, `customer_party_gv`, `purchase_order_date`, `despatch_advice_reference`, `supplier_party_krs`, `supplier_party_regon`, `supplier_party_bdo`, `supplier_contact_phone`, `supplier_contact_email`, `previous_advance_total`, `order_total_amount`, `prepayment_references[]`, writable `third_party_*`.
 
 ## [1.2.0] - 2026-03-26
 
@@ -393,7 +485,8 @@ This is a **beta release** (v0.9.x) intended for early adopters and development/
 
 ---
 
-[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/B2Brouter/b2brouter-php/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/B2Brouter/b2brouter-php/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/B2Brouter/b2brouter-php/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/B2Brouter/b2brouter-php/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/B2Brouter/b2brouter-php/compare/v0.9.1...v1.0.0

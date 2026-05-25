@@ -14,7 +14,7 @@ class B2BRouterClientTest extends TestCase
 
         $this->assertEquals('test_api_key', $client->getApiKey());
         $this->assertEquals('https://api-staging.b2brouter.net', $client->getApiBase());
-        $this->assertEquals('2026-03-02', $client->getApiVersion());
+        $this->assertEquals('2026-04-20', $client->getApiVersion());
         $this->assertEquals(80, $client->getTimeout());
     }
 
@@ -77,7 +77,7 @@ class B2BRouterClientTest extends TestCase
         $client->invoices->retrieve('inv_1');
 
         $request = $mockHttp->getLastRequest();
-        $this->assertEquals('2026-03-02', $request['headers']['X-B2B-API-Version']);
+        $this->assertEquals('2026-04-20', $request['headers']['X-B2B-API-Version']);
     }
 
     public function testCustomApiVersionHeaderSentInRequests()
