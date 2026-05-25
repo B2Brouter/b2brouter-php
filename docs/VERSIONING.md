@@ -9,7 +9,7 @@ The B2BRouter ecosystem has two version numbers that move independently:
 | Version | Format | Example | Who controls it |
 |---------|--------|---------|-----------------|
 | **SDK version** | SemVer (`major.minor.patch`) | `1.1.0` | This repository |
-| **API version** | Date-based (`YYYY-MM-DD`) | `2026-03-02` | B2BRouter platform |
+| **API version** | Date-based (`YYYY-MM-DD`) | `2026-04-20` | B2BRouter platform |
 
 The SDK version reflects changes to the PHP library — its classes, methods, signatures, and behavior. The API version reflects changes to the B2BRouter REST API — its endpoints, request/response shapes, and business rules.
 
@@ -29,7 +29,7 @@ Bug fixes and internal changes that don't affect the public interface:
 
 New functionality that is backwards-compatible, **including new API version pins**:
 
-- Change the default API version (e.g., `2025-10-13` → `2026-03-02`)
+- Change the default API version (e.g., `2026-03-02` → `2026-04-20`)
 - Add new service classes or methods
 - Add new configuration options
 
@@ -37,7 +37,7 @@ A minor release may change the default API version. Users who need the previous 
 
 ```php
 $client = new B2BRouterClient('your-api-key', [
-    'api_version' => '2025-10-13',  // Pin to previous API version
+    'api_version' => '2026-03-02',  // Pin to previous API version
 ]);
 ```
 
@@ -79,4 +79,25 @@ When a minor release changes the default API version, the CHANGELOG should docum
 3. How to pin the previous version if the user isn't ready to migrate
 4. Migration examples for affected API changes (before/after code snippets)
 
-This ensures users can upgrade the SDK safely and migrate to the new API version at their own pace. 
+This ensures users can upgrade the SDK safely and migrate to the new API version at their own pace.
+
+## Supported API versions
+
+The table below lists the API versions this SDK has shipped as a default, and the SDK release where each became the default. Any version listed here can still be selected via the `api_version` option — the SDK does not block older versions.
+
+| API version | SDK release that made it default |
+|-------------|----------------------------------|
+| `2026-04-20` (current default) | v1.3.0 |
+| `2026-03-02` | v1.1.0 |
+| `2025-10-13` | v0.9.0 |
+
+To pin a previous API version explicitly:
+
+```php
+$client = new B2BRouterClient('your-api-key', [
+    'api_version' => '2026-03-02',
+]);
+```
+
+Whether a given API version is still served by the B2BRouter platform is determined by the server, not the SDK. Consult the B2BRouter developer portal for the platform's API version support policy.
+
