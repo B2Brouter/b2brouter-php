@@ -1200,6 +1200,7 @@ Default cURL-based HTTP client implementation.
 #### Retry Logic
 
 - **Trigger:** Only on `ApiConnectionException` (network errors)
+- **Methods:** GET is retried after any network error. POST, PUT, PATCH and DELETE are retried only when the connection could not be opened (DNS or connection refused), because after a timeout the server may already have processed the request
 - **Max retries:** Configurable (default: 3)
 - **Backoff:** Exponential (1s, 2s, 4s, ...)
 - **No retry:** HTTP errors (4xx, 5xx) are not retried

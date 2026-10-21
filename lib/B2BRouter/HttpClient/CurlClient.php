@@ -6,11 +6,27 @@ use B2BRouter\Exception\ApiConnectionException;
 
 /**
  * HTTP client using cURL with automatic retry logic.
+ *
+ * GET requests are retried after any connection error. Other methods are
+ * retried only when the connection was never established, because after a
+ * timeout or a dropped connection the server may already have processed the
+ * request (for example, created the invoice), and sending it again would
+ * create a duplicate.
  */
 class CurlClient implements ClientInterface
 {
     private $maxRetries = 3;
     private $retryDelay = 1000; // milliseconds
+
+    /**
+     * cURL errors raised before the request is sent, so any method can be
+     * retried safely.
+     */
+    private const PRE_SEND_ERRORS = [
+        5, // CURLE_COULDNT_RESOLVE_PROXY
+        6, // CURLE_COULDNT_RESOLVE_HOST
+        7, // CURLE_COULDNT_CONNECT
+    ];
 
     /**
      * @param int $maxRetries Maximum number of retries for failed requests
@@ -31,13 +47,14 @@ class CurlClient implements ClientInterface
         $lastException = null;
 
         while ($attempt <= $this->maxRetries) {
+            $errorNo = 0;
             try {
-                return $this->executeRequest($method, $url, $headers, $body, $timeout);
+                return $this->executeRequest($method, $url, $headers, $body, $timeout, $errorNo);
             } catch (ApiConnectionException $e) {
                 $lastException = $e;
                 $attempt++;
 
-                if ($attempt > $this->maxRetries) {
+                if ($attempt > $this->maxRetries || !$this->isRetryable($method, $errorNo)) {
                     throw $e;
                 }
 
@@ -51,6 +68,18 @@ class CurlClient implements ClientInterface
     }
 
     /**
+     * Whether a request that failed with the given cURL error can be sent again.
+     *
+     * @param string $method
+     * @param int $errorNo
+     * @return bool
+     */
+    private function isRetryable($method, $errorNo)
+    {
+        return strtoupper($method) === 'GET' || in_array($errorNo, self::PRE_SEND_ERRORS, true);
+    }
+
+    /**
      * Execute a single HTTP request.
      *
      * @param string $method
@@ -58,10 +87,11 @@ class CurlClient implements ClientInterface
      * @param array $headers
      * @param array|string|null $body
      * @param int $timeout
+     * @param int $errorNo Set to the cURL error number (0 on success)
      * @return array
      * @throws ApiConnectionException
      */
-    private function executeRequest($method, $url, $headers, $body, $timeout)
+    private function executeRequest($method, $url, $headers, $body, $timeout, &$errorNo = 0)
     {
         $curl = curl_init();
 

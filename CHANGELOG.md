@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **No duplicate writes after a timeout** — `CurlClient` no longer resends a POST, PUT or DELETE after a timeout or a dropped connection, because the server may already have processed it (one `invoices->create()` could create up to 4 invoices). Those requests are still retried when the connection could not be opened (cURL errors 5, 6, 7). GET requests are retried as before.
+
 ## [1.3.0] - 2026-05-25
 
 ### Added
